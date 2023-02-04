@@ -1,6 +1,7 @@
 {
     "presets": [
-        ["@babel/env", { "targets": "> 0.25%, not dead" }]
+        ["@babel/env", { "targets": "> 0.25%, not dead" }],
+        "@babel/preset-typescript"
     ],
     "env": {
         "test": {
@@ -8,7 +9,8 @@
         },
         "modules": {
             "presets": [
-                ["@babel/env", { "targets": "> 0.25%, not dead", "modules": false }]
+                ["@babel/env", { "targets": "> 0.25%, not dead", "modules": false }],
+                "@babel/preset-typescript"
             ]
         }
     }

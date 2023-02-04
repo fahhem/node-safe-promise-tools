@@ -1,6 +1,12 @@
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+<!-- [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Build Status](https://travis-ci.org/benbria/node-promise-tools.svg?branch=master)](https://travis-ci.org/benbria/node-promise-tools)
-[![Coverage Status](https://coveralls.io/repos/benbria/node-promise-tools/badge.svg?branch=master&service=github)](https://coveralls.io/github/benbria/node-promise-tools?branch=master)
+[![Coverage Status](https://coveralls.io/repos/benbria/node-promise-tools/badge.svg?branch=master&service=github)](https://coveralls.io/github/benbria/node-promise-tools?branch=master) -->
+
+## Differences from promise-tools
+
+* Updated to use typescript natively and generate the .js and .d.ts files
+* Fixed a small typing mistake that could only be caught with native Typescript or maybe 10x more tests
+* Switched to `safe-timers` instead of the native `setTimeout`, et al, functions
 
 ## What is it?
 
@@ -10,7 +16,7 @@ functions defined in the ECMAScript 2015 standard. But all of these libraries ma
 Promise (because all of them have been around since before Promises were part of the ECMAScript standard), and
 most of them are kind of on the big side (bluebird clocks in at almost 166k, unminified.)
 
-The goal of `promise-tools` is to provide a small library of [async](https://github.com/caolan/async)-like functions,
+The goal of `safe-promise-tools` is to provide a small library of [async](https://github.com/caolan/async)-like functions,
 and some other handy functions, and let you use these functions on top of any Promise implementation.
 
 (Also, if you're writing a library and you want to make it easy for your callers to use either Promises or callbacks,
@@ -18,7 +24,7 @@ be sure to check out [promise-breaker](https://github.com/jwalton/node-promise-b
 
 ## Installation
 
-    npm install --save promise-tools
+    npm install --save safe-promise-tools
 
 ## Requirements
 
