@@ -1,6 +1,6 @@
 {
   "name": "safe-promise-tools",
-  "version": "0.0.0-semantic-release",
+  "version": "3.0.0",
   "description": "Tools for working with Promises",
   "main": "dist/lib/index.js",
   "module": "dist/module/index.js",
