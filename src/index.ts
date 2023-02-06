@@ -142,10 +142,12 @@ export function map<t, u>(arr: t[], iter: MapIterator<t, u>, limit?: number): Pr
  * reject with the error "Timeout: Promise did not resolve within ${ms} milliseconds"
  */
 export function timeout<t>(p: Promise<t>, ms: number): Promise<t> {
+    // Create the error here so we keep the traceback.
+    const timeoutError = new TimeoutError(`Timeout: Promise did not resolve within ${ms} milliseconds`)
     return new Promise((resolve, reject) => {
         let timer: Timeout = setTimeout(() => {
             timer = null;
-            reject(new TimeoutError(`Timeout: Promise did not resolve within ${ms} milliseconds`));
+            reject(timeoutError);
         }, ms);
 
         p.then(
