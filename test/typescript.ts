@@ -1,5 +1,8 @@
-import * as pt from '../';
+import {expect, describe, it} from '@jest/globals';
+import * as pt from '../src/';
 
+describe('typescript tests', () => {
+    it('should all pass', async () => {
 let promises: Promise<any>[] = [];
 
 promises.push(pt.retry<Number>((): Promise<Number> => {
@@ -14,7 +17,7 @@ promises.push(pt.retry<String>(2, (): Promise<String> => {
     return Promise.resolve('what');
 }));
 
-promises.push(pt.delay(1000).then(() => console.log('done delay')));
+promises.push(pt.delay(1000));
 
 const deferred = pt.defer<string>();
 
@@ -56,11 +59,11 @@ const pDoWhilst = pt.doWhilst<number>(() => {
 }, () => (tries2 < 3));
 promises.push(pDoWhilst);
 
-Promise.all(promises)
-.then(result => {
-    console.log(result);
+await expect(Promise.all(promises)).resolves.toBeDefined();
+
+const error = new pt.TimeoutError("Message");
+
+expect(error).toBeInstanceOf(Error);
+
 });
-
-const error = new pt.TimeoutError();
-
-console.log(error instanceof Error);
+});

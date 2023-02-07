@@ -1,8 +1,5 @@
-"use strict"
+import {expect} from '@jest/globals';
 
-let chai = require('chai');
-chai.use(require('chai-as-promised'));
-let expect = chai.expect;
 let promiseTools = require('../src');
 
 describe('parallel', () => {
@@ -15,7 +12,7 @@ describe('parallel', () => {
 
         return Promise.all(tasks.map((task) => task()))
         .then((expectedResults) => {
-            return expect(promiseTools.parallel(tasks)).to.eventually.eql(expectedResults);
+            return expect(promiseTools.parallel(tasks)).resolves.toEqual(expectedResults);
         });
     });
 
@@ -26,8 +23,7 @@ describe('parallel', () => {
             () => "c"
         ];
 
-        return expect(promiseTools.parallel(tasks))
-        .to.eventually.be.rejectedWith("boom")
+        return expect(promiseTools.parallel(tasks)).rejects.toThrow("boom")
     });
 
     it('should execute multiple functions and return results with a limit supplied', () => {
@@ -38,11 +34,15 @@ describe('parallel', () => {
         ];
 
         return Promise.all([
-            expect(promiseTools.parallelLimit(tasks, 1), "With 1 parallel").to.eventually.eql(['a', 'b', 'c']),
-            expect(promiseTools.parallelLimit(tasks, 2), "With 2 parallel").to.eventually.eql(['a', 'b', 'c']),
-            expect(promiseTools.parallelLimit(tasks, 3), "With 3 parallel").to.eventually.eql(['a', 'b', 'c']),
-            expect(promiseTools.parallelLimit(tasks, 4), "With 4 parallel").to.eventually.eql(['a', 'b', 'c'])
-        ])
+            // With 1 parallel
+            expect(promiseTools.parallelLimit(tasks, 1)).resolves.toEqual(['a', 'b', 'c']),
+            // With 2 parallel
+            expect(promiseTools.parallelLimit(tasks, 2)).resolves.toEqual(['a', 'b', 'c']),
+            // With 3 parallel
+            expect(promiseTools.parallelLimit(tasks, 3)).resolves.toEqual(['a', 'b', 'c']),
+            // With 4 parallel
+            expect(promiseTools.parallelLimit(tasks, 4)).resolves.toEqual(['a', 'b', 'c'])
+        ]);
     });
 
     it('should execute tasks concurrently to a limit', () => {
@@ -67,23 +67,28 @@ describe('parallel', () => {
 
         return promiseTools.parallelLimit(tasks, 3)
         .then(() => {
-            expect(maxRunning, "max concurrent tasks").to.equal(3);
-            expect(complete, "tasks run").to.equal(10);
+            // max concurrent tasks
+            expect(maxRunning).toBe(3);
+            // tasks run
+            expect(complete).toBe(10);
         });
     });
 
-    it('should stop if a function returns an error when a limit is supplied', () => {
+    it('should stop if a function returns an error when a limit is supplied', async () => {
         let tasks = [
             () => "a",
             () => {throw new Error("boom")},
             () => "b"
         ];
 
+        await expect(promiseTools.parallelLimit(tasks, 1))
+        .rejects.toBeDefined();
+
         return Promise.all([
-            expect(promiseTools.parallelLimit(tasks, 1), "With 1 parallel").to.eventually.rejectedWith("boom"),
-            expect(promiseTools.parallelLimit(tasks, 2), "With 2 parallel").to.eventually.rejectedWith("boom"),
-            expect(promiseTools.parallelLimit(tasks, 3), "With 3 parallel").to.eventually.rejectedWith("boom"),
-            expect(promiseTools.parallelLimit(tasks, 4), "With 4 parallel").to.eventually.rejectedWith("boom")
-        ])
+            expect(promiseTools.parallelLimit(tasks, 1)).rejects.toThrow("boom"),
+            expect(promiseTools.parallelLimit(tasks, 2)).rejects.toThrow("boom"),
+            expect(promiseTools.parallelLimit(tasks, 3)).rejects.toThrow("boom"),
+            expect(promiseTools.parallelLimit(tasks, 4)).rejects.toThrow("boom"),
+        ]);
     });
 });

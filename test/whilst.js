@@ -1,8 +1,5 @@
-"use strict"
+import {expect} from '@jest/globals';
 
-let chai = require('chai');
-chai.use(require('chai-as-promised'));
-let expect = chai.expect;
 let promiseTools = require('../src');
 
 describe('whilst', () => {
@@ -17,8 +14,8 @@ describe('whilst', () => {
                     return Promise.resolve(count);
                 }
             )
-        ).to.eventually.equal(10)
-        .then( () => expect(count).to.equal(10) );
+        ).resolves.toBe(10)
+        .then( () => expect(count).toBe(10) );
     });
 
     it('should work, even if fn does not return a promise', () => {
@@ -31,7 +28,7 @@ describe('whilst', () => {
                     return count;
                 }
             )
-        ).to.eventually.equal(10)
+        ).resolves.toBe(10);
     });
 
     it('should return `null` if `test` returns false immediately', () => {
@@ -41,8 +38,8 @@ describe('whilst', () => {
                 () => false,
                 () => {fnCalled = true;}
             )
-        ).to.eventually.equal(null)
-        .then(() => expect(fnCalled).to.be.false)
+        ).resolves.toBeNull()
+        .then(() => expect(fnCalled).toBe(false));
     });
 
     it('should reject if fn rejects', () => {
@@ -52,7 +49,7 @@ describe('whilst', () => {
                 () => count < 10,
                 () => Promise.reject(new Error('foo'))
             )
-        ).to.be.rejectedWith('foo');
+        ).rejects.toThrow('foo');
     });
 
     it('should reject if fn throws', () => {
@@ -64,7 +61,7 @@ describe('whilst', () => {
                     throw new Error('foo');
                 }
             )
-        ).to.be.rejectedWith('foo');
+        ).rejects.toThrow('foo');
     });
 
     it('should reject if test throws', () => {
@@ -73,7 +70,7 @@ describe('whilst', () => {
                 () => {throw new Error('foo');},
                 () => {}
             )
-        ).to.be.rejectedWith('foo');
+        ).rejects.toThrow('foo');
     });
 
 });
@@ -90,8 +87,8 @@ describe('doWhilst', () => {
                 },
                 () => count < 10
             )
-        ).to.eventually.equal(10)
-        .then( () => expect(count).to.equal(10) );
+        ).resolves.toBe(10)
+        .then( () => expect(count).toBe(10) );
     });
 
     it('should call fn once, even if test returns false immediately', () => {
@@ -104,8 +101,8 @@ describe('doWhilst', () => {
                 },
                 () => false
             )
-        ).to.eventually.equal("hello")
-        .then( () => expect(fnCount).to.equal(1) );
+        ).resolves.toBe("hello")
+        .then( () => expect(fnCount).toBe(1) );
     });
 
 });

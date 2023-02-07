@@ -1,8 +1,5 @@
-"use strict"
+import {expect} from '@jest/globals';
 
-let chai = require('chai');
-chai.use(require('chai-as-promised'));
-let expect = chai.expect;
 let promiseTools = require('../src');
 
 describe('series', () => {
@@ -13,7 +10,7 @@ describe('series', () => {
             () => Promise.resolve("c")
         ];
 
-        return expect(promiseTools.series(tasks)).to.eventually.eql(['a', 'b', 'c']);
+        return expect(promiseTools.series(tasks)).resolves.toEqual(['a', 'b', 'c']);
     });
 
     it('should execute multiple functions one by one', () => {
@@ -28,7 +25,7 @@ describe('series', () => {
 
         return promiseTools.series(tasks)
         .then(() => {
-            expect(order).to.equal("ab");
+            expect(order).toBe("ab");
         });
     });
 
@@ -40,11 +37,10 @@ describe('series', () => {
             () => order = order + "b"
         ];
 
-        return expect(promiseTools.series(tasks))
-        .to.eventually.be.rejectedWith("boom")
+        return expect(promiseTools.series(tasks)).rejects.toThrow("boom")
         .then(() => {
             // Should execute the first function, but not the third function.
-            expect(order).to.equal("a");
+            expect(order).toBe("a");
         });
     });
 });

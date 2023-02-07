@@ -1,11 +1,9 @@
-"use strict"
-
 import { setTimeout, type Timeout } from 'safe-timers';
 
 type PromiseGeneratingFunction<t> = () => PromiseLike<t>;
 
-class TimeoutError extends Error {
-    constructor(message) {
+export class TimeoutError extends Error {
+    constructor(message: string) {
         super(...arguments);
         if (!(this instanceof TimeoutError)) {
             return new TimeoutError(message);
@@ -43,12 +41,11 @@ type Deferred<t> = {
  * `reject` are called.
  */
 export function defer<t>(): Deferred<t> {
-    let answer: Partial<Deferred<t>> = {
-        promise: new Promise((resolve, reject) => {
-            answer.resolve = resolve;
-            answer.reject = reject;
-        })
-    };
+    const answer: Partial<Deferred<t>> = {};
+    answer.promise = new Promise((resolve, reject) => {
+        answer.resolve = resolve;
+        answer.reject = reject;
+    });
     return answer as Deferred<t>;
 }
 
