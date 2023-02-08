@@ -3,6 +3,7 @@
     "outDir": "dist",
     "declaration": true,
     "emitDeclarationOnly": true,
+    "moduleResolution": "node",
     "target": "ES6"
   },
   "include": ["src"]
